@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "st7789v2.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
