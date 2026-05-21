@@ -82,7 +82,7 @@ void GCC_DebugPrintf(const char *fmt, ...)
     va_start(args, fmt);
 
     /* Format into buffer with newline */
-    char local_buf[128];
+    char local_buf[DEBUG_BUF_SIZE];
     int  len;
 
     va_list args_copy;
