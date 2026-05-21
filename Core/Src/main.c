@@ -21,6 +21,7 @@
 #include "dma.h"
 #include "spi.h"
 #include "tim.h"
+#include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
 
@@ -28,6 +29,8 @@
 /* USER CODE BEGIN Includes */
 #include "st7789v2.h"
 #include "GUI.h"
+#include "gcc_debug_util.h"
+#include "usbd_cdc_if.h"
 
 extern volatile GUI_TIMER_TIME OS_TimeMS;
 /* USER CODE END Includes */
@@ -50,7 +53,19 @@ extern volatile GUI_TIMER_TIME OS_TimeMS;
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+void GCC_DebugSend(const uint8_t *data, uint16_t len)
+{
+  // print to virtual com port
+  // extern USBD_HandleTypeDef hUsbDeviceFS;
+  // USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
+  // while (hcdc->TxState != 0){    
+  // }
+  // CDC_Transmit_FS(data, len);
 
+  //print to uart
+  HAL_UART_Transmit(&huart1,data,len,50);
+  
+}
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,7 +76,21 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void usb_reset(void)
+{
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    
+    GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11|GPIO_PIN_12, GPIO_PIN_RESET);
+    HAL_Delay(200);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11|GPIO_PIN_12, GPIO_PIN_SET);
+}
 /* USER CODE END 0 */
 
 /**
@@ -88,7 +117,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  usb_reset();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -97,8 +126,11 @@ int main(void)
   MX_SPI3_Init();
   MX_USB_DEVICE_Init();
   MX_TIM7_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   __HAL_RCC_CRC_CLK_ENABLE();
+  GCC_DebugInit();
+  GCC_DebugEnable();
   st7789_init();
   st7789_fill_color(COLOR_GREEN);
   GUI_Init();  
@@ -111,6 +143,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    GCC_DebugPrintf("Current tick: %d\r\n",uwTick);
+    HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

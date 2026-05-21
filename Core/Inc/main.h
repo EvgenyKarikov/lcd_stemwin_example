@@ -31,7 +31,9 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#ifndef DEBUG_BUF_SIZE
+  #define DEBUG_BUF_SIZE 512
+#endif
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

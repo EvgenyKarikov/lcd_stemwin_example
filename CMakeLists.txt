@@ -56,6 +56,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     gui/st7789_emwin_drv.c
     STemWin/OS/GUI_X.c
     BSP/st7789v2.c
+
+    gcc_debug_util/gcc_debug_util.c
 )
 
 # Add include paths
@@ -64,6 +66,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     BSP/
     STemWin/inc/
     gui/    
+    gcc_debug_util/
 )
 
 # Add project symbols (macros)
