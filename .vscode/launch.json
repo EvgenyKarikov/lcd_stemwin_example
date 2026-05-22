@@ -21,6 +21,17 @@
                 "enabled": true,
                 "samplesPerSecond": 1
             },
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                    "label": "RTT channel 0",
+                    "port": 0,
+                    "type": "console"
+                    }
+                ]
+                },
 		},
         {
 			"name": "openocd attach",

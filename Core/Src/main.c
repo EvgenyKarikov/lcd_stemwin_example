@@ -29,9 +29,10 @@
 /* USER CODE BEGIN Includes */
 #include "st7789v2.h"
 #include "GUI.h"
+
 #include "gcc_debug_util.h"
 #include "usbd_cdc_if.h"
-
+#include "SEGGER_RTT.h"
 extern volatile GUI_TIMER_TIME OS_TimeMS;
 /* USER CODE END Includes */
 
@@ -63,8 +64,10 @@ void GCC_DebugSend(const uint8_t *data, uint16_t len)
   // CDC_Transmit_FS(data, len);
 
   //print to uart
-  HAL_UART_Transmit(&huart1,data,len,50);
+  //HAL_UART_Transmit(&huart1,data,len,50);
   
+  //print using RTT  
+  SEGGER_RTT_Write(0,data,len);
 }
 /* USER CODE END PV */
 
@@ -129,6 +132,8 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   __HAL_RCC_CRC_CLK_ENABLE();
+  SEGGER_RTT_Init();
+  SEGGER_RTT_printf(0, "System started");
   GCC_DebugInit();
   GCC_DebugEnable();
   st7789_init();
@@ -145,6 +150,7 @@ int main(void)
   {
     GCC_DebugPrintf("Current tick: %d\r\n",uwTick);
     HAL_Delay(500);
+    HAL_GPIO_TogglePin(GPIOE, LED_RED_Pin|LED_GREEN_Pin|LED_BLUE_Pin);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

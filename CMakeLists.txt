@@ -58,6 +58,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     BSP/st7789v2.c
 
     gcc_debug_util/gcc_debug_util.c
+    RTT-main/RTT/SEGGER_RTT.c
+    RTT-main/RTT/SEGGER_RTT_printf.c
 )
 
 # Add include paths
@@ -67,6 +69,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     STemWin/inc/
     gui/    
     gcc_debug_util/
+    RTT-main/RTT
+    RTT-main/Config
 )
 
 # Add project symbols (macros)
